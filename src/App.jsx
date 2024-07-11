@@ -10,15 +10,18 @@ function App() {
   const [showFinished, setShowFinished] = useState(false);
 
   useEffect(() => {
-    let todos = JSON.parse(localStorage.getItem("todos"));
-    setTodos(todos);
-  }, []);
+    let todoString = localStorage.getItem("todos")
+    if(todoString){
+      let todos = JSON.parse(localStorage.getItem("todos")) 
+      setTodos(todos)
+    }
+  }, [])
 
   const saveToLS = () => {
     localStorage.setItem("todos", JSON.stringify(todos));
   };
 
-  const toggleFinish = () => {
+  const toggleFinish = (e) => {
     setShowFinished(!showFinished);
   };
 
@@ -47,7 +50,7 @@ function App() {
     setTodo(e.target.value);
   };
   const handleCheckbox = (e) => {
-    let id = e.target.id;
+    let id = e.target.name;
     let index = todos.findIndex((item) => {
       return item.id === id;
     });
@@ -93,17 +96,16 @@ function App() {
           <div className="h-[1px] bg-black opacity-15 w-[90%] mx-auto my-3"></div>
           <h2 className="text-lg font-bold">Your Todos</h2>
           <div className="todos">
-            {todos.length == 0 && <div> No Todos to display</div>}
+          {todos.length === 0 && <div className='m-5'>No Todos to display</div> }
             {todos.map((item) => {
-              return (
-                (showFinished || !item.isComplited) && (
+              return(showFinished || !item.isCompleted) &&  
                   <div
                     className="todo block md:flex gap-5 md:w-full justify-between my-3 "
                     key={item.id}
                   >
                     <input
                       type="checkbox"
-                      id={item.id}
+                      name={item.id}
                       onChange={handleCheckbox}
                       checked={item.isComplited}
                       className="mb-3"
@@ -134,8 +136,6 @@ function App() {
                       </button>
                     </div>
                   </div>
-                )
-              );
             })}
           </div>
         </div>
